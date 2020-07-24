@@ -1,0 +1,16 @@
+{
+  "name": "ipjs",
+  "version": "0.0.0",
+  "description": "",
+  "main": "argv.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
+  "license": "(Apache-2.0 AND MIT)",
+  "devDependencies": {
+    "standard": "^14.3.4"
+  }
+}
