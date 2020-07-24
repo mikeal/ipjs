@@ -22,9 +22,13 @@ And of course, we can look at the ETAG to do HTTP Push of **only** the files tha
 changed since the prior version of that package request.
 
 ```sh
+type Dependencies { String: Package }
+
 # Directory is a UnixFSv2 directory
 struct Package {
   name String
+  deps Dependencies
+
   lambda optional Directory
   nodejs optional Directory
   deno optional Directory
