@@ -11,6 +11,10 @@ const help = () => {
   process.exit(1)
 }
 
+const api = {
+  '$input': async () => process.stdin // Do we need a permission system or is that implicit when you pipe?
+}
+
 const run = async args => {
   const target = args.shift()
   if (!target) throw new Error('Missing target file or package name in registry')
@@ -25,7 +29,31 @@ const run = async args => {
   } else {
     throw new Error('Package exports does not match main function signature TODO: insert link')
   }
-  return fn(await parse(args))
+  let ret = await fn({...await parse(args), ...api})
+  if (typeof ret === 'string') return console.log(ret)
+  if (ret instanceof Uint8Array) return process.stdout.write(ret)
+  if (typeof ret === 'object') {
+    if (ret[Symbol.asyncIterator]) {
+      for await (const chunk of ret) {
+        if (typeof chunk !== 'string' && !(chunk instanceof Uint8Array)) {
+          throw new Error('Generators returned from exported functions can only yield strings and Uint8Arrays')
+        }
+        process.stdout.write(chunk)
+      }
+      return
+    }
+    if (ret[Symbol.iterator]) {
+      for (const chunk of ret) {
+        if (typeof chunk !== 'string' && !(chunk instanceof Uint8Array)) {
+          throw new Error('Generators returned from exported functions can only yield strings and Uint8Arrays')
+        }
+        process.stdout.write(chunk)
+      }
+      return
+    }
+    // Note: should we exclude any types from being logged?
+  }
+  console.log(ret)
 }
 
 const helpflags = ['--help', '-h']

@@ -1,3 +1,3 @@
-const main = opts => console.log(opts)
+const main = opts => opts
 
 export { main }

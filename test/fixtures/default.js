@@ -1,3 +1,1 @@
-export default opts => {
-  console.log(opts)
-}
+export default opts => opts
