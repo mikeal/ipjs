@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import argv from './src/argv.js'
+// import argv from './src/argv.js'
 import run from './src/run.js'
-import api from './src/api.js'
+// import api from './src/api.js'
 
-const [ , , command, ...args ] = process.argv
+const [, , command, ...args] = process.argv
 
 const commands = {}
 

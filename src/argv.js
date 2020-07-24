@@ -50,6 +50,7 @@ export default schema => {
           throw new Error('Invalid boolean value')
         }
       }
+      /* eslint-disable-next-line */
       if (type && !(typeof v === type)) {
         throw new Error(`Invalid type. ${name} must be of type ${type}`)
       }

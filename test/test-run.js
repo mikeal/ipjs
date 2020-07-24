@@ -2,7 +2,7 @@ import { deepStrictEqual as same } from 'assert'
 import run from '../src/run.js'
 
 export default test => {
-  const capture = () =>  {
+  const capture = () => {
     const data = []
     const onConsole = (...args) => data.push(args)
     const stdout = { write: (...args) => data.push(args) }
@@ -19,7 +19,7 @@ export default test => {
     test(name, async () => {
       const data = await runner([filename, '--bool'])
       same(data.length, 1)
-      const [ [ opts ] ] = data
+      const [[opts]] = data
       same(opts.bool, true)
     })
   }
@@ -29,13 +29,13 @@ export default test => {
   test('run named fixture with schema, no args', async () => {
     const data = await runner(['test/fixtures/named-with-schema.js'])
     same(data.length, 1)
-    const [ [ opts ] ] = data
+    const [[opts]] = data
     same(opts.bool, false)
   })
 
   test('run buffer', async () => {
     const data = await runner(['test/fixtures/buffer.js', '--bool'])
-    const [ [ buff ] ] = data
+    const [[buff]] = data
     same(buff instanceof Uint8Array, true)
     const opts = JSON.parse(buff.toString())
     same(opts.bool, true)
@@ -43,7 +43,7 @@ export default test => {
 
   test('run string', async () => {
     const data = await runner(['test/fixtures/string.js', '--bool'])
-    const [ [ str ] ] = data
+    const [[str]] = data
     same(typeof str === 'string', true)
     const opts = JSON.parse(str)
     same(opts.bool, true)
@@ -52,7 +52,7 @@ export default test => {
   const mktestgen = (name, filename) => {
     test(name, async () => {
       const data = await runner([filename, '--bool'])
-      const [ [ str ], [ buff ] ] = data
+      const [[str], [buff]] = data
       same(typeof str === 'string', true)
       const opts = JSON.parse(str)
       same(opts.bool, true)

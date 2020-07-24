@@ -10,7 +10,7 @@ export default (filepath, cwd) => {
   let resolved
   if (filepath.startsWith('./')) filepath = filepath.slice(2)
   if (filepath.startsWith('/')) resolved = filepath
-  else resolved = (cwd ? cwd : '') + '/' + filepath
+  else resolved = (cwd || '') + '/' + filepath
 
   // path.resolve strips trailing slashes so we must add them back
   const filePathLast = filepath.charCodeAt(filepath.length - 1)
