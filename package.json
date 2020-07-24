@@ -11,6 +11,7 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
+    "estest": "^10.2.4",
     "standard": "^14.3.4"
   }
 }
