@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// import argv from './src/argv.js'
+import argv from './src/argv.js'
 import run from './src/run.js'
 // import api from './src/api.js'
+import * as registry from './src/registry/index.js'
 
 const [, , command, ...args] = process.argv
 
@@ -17,6 +18,13 @@ const helpflags = ['--help', '-h']
 
 commands.help = help
 commands.run = args => run(args, { onConsole: console.log, cwd: process.cwd(), stdout: process.stdout })
+commands.registry = async args => {
+  const subcommand = args.shift()
+  const cmd = registry[subcommand]
+  if (!cmd) throw new Error('Unknown registry command')
+  const opts = await argv(cmd.schema || {})(args)
+  cmd(opts)
+}
 
 if (!command || !commands[command] || helpflags.includes(command)) help()
 

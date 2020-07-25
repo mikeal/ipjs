@@ -23,6 +23,8 @@ export default schema => {
     for (const [key, value] of Object.entries(schema)) {
       if (value && typeof value === 'object' && typeof value.default !== 'undefined') {
         args[key] = value.default
+      } else if (typeof value !== 'object') {
+        args[key] = value
       }
     }
     if (argv.includes('--')) {

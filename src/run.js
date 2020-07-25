@@ -6,7 +6,7 @@ const run = async (args, { onConsole, cwd, stdout }) => {
   const target = args.shift()
   if (!target) throw new Error('Missing target file or package name in registry')
   const module = await import(pathToUrl(target, cwd))
-  const [fn, parse] = fromModule(module)
+  const { fn, parse } = fromModule(module)
   const ret = await fn({ ...await parse(args), ...api })
   if (typeof ret === 'string') return onConsole(ret)
   if (ret instanceof Uint8Array) return stdout.write(ret)
