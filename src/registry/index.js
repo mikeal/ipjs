@@ -34,6 +34,17 @@ const publish = async opts => {
     console.log(`Published ${cid.toString()} to ${url}`)
   }
 }
+
 publish.schema = { url: 'http://localhost:8080' }
 
-export { serve, publish }
+const client = async opts => {
+  opts = { ...client.schema, ...opts}
+  if (!opts.name) throw new Error('Missing required argument "name"')
+  const db = await dagdb.open(opts.url)
+  const pkg = await db.get(opts.name)
+  return pkg
+}
+
+client.schema = { url: 'http://localhost:8080' }
+
+export { serve, publish, client }

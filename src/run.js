@@ -1,11 +1,21 @@
 import pathToUrl from './path-to-url.js'
 import api from './api.js'
+import { client } from './registry/index.js'
 import { fromModule } from './util.js'
+import { promises as fs } from 'fs'
 
 const run = async (args, { onConsole, cwd, stdout }) => {
   const target = args.shift()
   if (!target) throw new Error('Missing target file or package name in registry')
-  const module = await import(pathToUrl(target, cwd))
+  let module
+  if (target.startsWith('@')) {
+    const name = target.slice('@ipjs/'.length)
+    const pkg = await client({name, url: 'http://localhost:8080'})
+    const buffer = Buffer.from(pkg.nodejs)
+    module = await import(`data:text/javascript,${buffer.toString()}`)
+  } else {
+    module = await import(pathToUrl(target, cwd))
+  }
   const { fn, parse } = fromModule(module)
   const ret = await fn({ ...await parse(args), ...api })
   if (typeof ret === 'string') return onConsole(ret)
