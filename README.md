@@ -25,7 +25,7 @@ changed since the prior version of that package request.
 type Dependencies { String: Package }
 
 # Directory is a UnixFSv2 directory
-struct Package {
+type Package struct {
   name String
   deps Dependencies
 

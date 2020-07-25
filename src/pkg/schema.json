@@ -1,0 +1,39 @@
+{
+  "types": {
+    "Dependencies": {
+      "kind": "map",
+      "keyType": "String",
+      "valueType": "Package"
+    },
+    "Package": {
+      "kind": "struct",
+      "fields": {
+        "name": {
+          "type": "String"
+        },
+        "deps": {
+          "type": "Dependencies"
+        },
+        "lambda": {
+          "type": "Directory",
+          "optional": true
+        },
+        "nodejs": {
+          "type": "Directory",
+          "optional": true
+        },
+        "deno": {
+          "type": "Directory",
+          "optional": true
+        },
+        "browser": {
+          "type": "Directory",
+          "optional": true
+        }
+      },
+      "representation": {
+        "map": {}
+      }
+    }
+  }
+}
