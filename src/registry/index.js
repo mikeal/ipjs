@@ -1,4 +1,5 @@
 import createHandler from './serve.js'
+import pkg from '../pkg/index.js'
 import dagdb from 'dagdb'
 import http from 'http'
 
@@ -17,8 +18,22 @@ const serve = async opts => {
 serve.schema = { host: 'localhost', port: 8080 }
 
 const publish = async opts => {
-  const [ file, name, tag ] = opts.args
-  console.log({file, name, tag})
+  const { url, args: [ file, ...names ] } = opts
+  if (!file) throw new Error('Missing filename to publish')
+  if (!names.length) throw new Error('Missing publish names')
+  const db = await dagdb.open(url)
+  let last
+  for await (const block of pkg(file)) {
+    await db.store.put(block)
+    last = block
+  }
+  const cid = await last.cid()
+  for (const name of names) {
+    await db.set(name, last)
+    await db.update()
+    console.log(`Published ${cid.toString()} to ${url}`)
+  }
 }
+publish.schema = { url: 'http://localhost:8080' }
 
 export { serve, publish }
