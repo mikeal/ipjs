@@ -19,6 +19,9 @@
     "standard": "^14.3.4"
   },
   "dependencies": {
-    "dagdb": "^0.9.3"
+    "@ipld/block": "^6.0.1",
+    "@textile/ipfs-lite": "^0.1.6",
+    "dagdb": "^0.9.3",
+    "peer-info": "^0.17.5"
   }
 }

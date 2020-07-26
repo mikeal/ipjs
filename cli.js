@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import argv from './src/argv.js'
 import run from './src/run.js'
+import seed from './src/seed.js'
 // import api from './src/api.js'
 import * as registry from './src/registry/index.js'
 
@@ -25,6 +26,8 @@ commands.registry = async args => {
   const opts = await argv(cmd.schema || {})(args)
   cmd(opts)
 }
+const _argv = argv({})
+commands.seed = async args => seed(await _argv(args))
 
 if (!command || !commands[command] || helpflags.includes(command)) help()
 

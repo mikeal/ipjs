@@ -1,0 +1,28 @@
+import pkg from './pkg/index.js'
+import ipfs from '@textile/ipfs-lite'
+import setup from '@textile/ipfs-lite/dist/setup/index.js'
+import storage from 'interface-datastore'
+const { Peer, BlockStore, Block } = ipfs
+const { setupLibP2PHost } = setup
+const { MemoryDatastore } = storage
+
+let store = new BlockStore(new MemoryDatastore())
+
+const seed = async opts => {
+  const { args: [ filename ] } = opts
+  let last
+  for await (const block of pkg(filename)) {
+    const data = block.encode()
+    const cid = await block.cid()
+    await store.put(new Block(data, cid))
+    last = block
+  }
+  const cid = await last.cid()
+  const host = await setupLibP2PHost()
+
+  const lite = new Peer(store, host)
+  await lite.start()
+  console.log(`Seeding ipfs:${cid.toString()}`)
+}
+
+export default seed
