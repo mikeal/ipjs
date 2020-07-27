@@ -14,12 +14,10 @@ overlap in the file contents because DAG de-duplication takes care of this
 for us.
 
 This means that an import of `'#ipjs/two'` is re-written simply as `../two/index.js`
+for Node.js.
 
-This may look like it's dynamically linked but it actually isn't because a browser
-request for `http://registry/mypkg` returns a forward to `https://registry/{hash}/browser/`
-
-And of course, we can look at the ETAG to do HTTP Push of **only** the files that have
-changed since the prior version of that package request.
+The `broswer-ipjs` build is slightly different. It links every file to `/_ipjs/CID.js`
+for maximal caching in the browser.
 
 ```sh
 type Dependencies { String: Package }
@@ -30,8 +28,14 @@ type Package struct {
   deps Dependencies
 
   lambda optional Directory
-  nodejs optional Directory
+  nodejs-esm optional Directory
+  nodejs-cjs optional Directory
   deno optional Directory
   browser optional Directory
+  browser-esm optional Directory
+  browser-ipjs optional Directory
 }
 ```
+
+From all this we can also output a package for npm that works across every environment
+using a mix of entry point fields in package.json and a lot of mostly duplicated files.
