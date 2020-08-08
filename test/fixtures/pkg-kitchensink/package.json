@@ -1,0 +1,20 @@
+{
+  "name": "pkg-kitchensink",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
+  "license": "(Apache-2.0 AND MIT)",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "browser": "./src/browser.js",
+      "deno": "./src/deno.js"
+    }
+  }
+}

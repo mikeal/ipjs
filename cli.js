@@ -23,7 +23,6 @@ const nodeEnv = { onConsole: console.log, cwd: process.cwd(), stdout: process.st
 
 commands.help = help
 commands.run = args => run(args, nodeEnv)
-commands.build = args => build({..._argv(args), ...nodeEnv})
 
 // Future Demo
 /*
@@ -49,6 +48,8 @@ commands.seed = async args => seed(await _argv(args))
 */
 
 const _argv = argv({})
+
+commands.build = async args => build({...await _argv(args), ...nodeEnv})
 
 if (!command || !commands[command] || helpflags.includes(command)) help()
 
