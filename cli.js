@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import argv from './src/argv.js'
 import run from './src/run.js'
+import { createServer } from './src/serve.js'
 import seed from './src/seed.js'
 // import api from './src/api.js'
 import * as registry from './src/registry/index.js'
@@ -25,6 +26,17 @@ commands.registry = async args => {
   if (!cmd) throw new Error('Unknown registry command')
   const opts = await argv(cmd.schema || {})(args)
   cmd(opts)
+}
+commands.serve = async args => {
+  const filename = args.shift()
+  const server = await createServer(filename, process.cwd())
+  await new Promise((resolve, reject) => {
+    server.listen(8282, e => {
+      if (e) reject(e)
+      resolve()
+    })
+  })
+  console.log(`Serving ${filename} on http://localhost:8282`)
 }
 const _argv = argv({})
 commands.seed = async args => seed(await _argv(args))

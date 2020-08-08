@@ -1,9 +1,12 @@
 {
   "name": "ipjs",
-  "version": "0.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "argv.js",
   "type": "module",
+  "imports": {
+    "#ipjs/run": "./src/run.js"
+  },
   "scripts": {
     "test": "estest test/test-*.js",
     "build:schema": "ipld-schema to-json README.md > src/pkg/schema.json"
@@ -20,8 +23,7 @@
   },
   "dependencies": {
     "@ipld/block": "^6.0.1",
-    "@textile/ipfs-lite": "^0.1.6",
     "dagdb": "^0.9.3",
-    "peer-info": "^0.17.5"
+    "ipfs": "^0.48.1"
   }
 }
