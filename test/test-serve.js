@@ -1,6 +1,6 @@
 import getport from 'get-port'
 import bent from 'bent'
-import { createServer } from '../src/serve.js'
+import { createServer } from '../src/demo/serve.js'
 import { deepStrictEqual as same } from 'assert'
 
 const cwd = process.cwd()

@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 import argv from './src/argv.js'
 import run from './src/run.js'
-import { createServer } from './src/serve.js'
-import seed from './src/seed.js'
+import build from './src/build.js'
+// import { createServer } from './src/serve.js'
+// import seed from './src/seed.js'
 // import api from './src/api.js'
-import * as registry from './src/registry/index.js'
+// import * as registry from './src/registry/index.js'
 
 const [, , command, ...args] = process.argv
 
@@ -18,8 +19,14 @@ const help = () => {
 
 const helpflags = ['--help', '-h']
 
+const nodeEnv = { onConsole: console.log, cwd: process.cwd(), stdout: process.stdout }
+
 commands.help = help
-commands.run = args => run(args, { onConsole: console.log, cwd: process.cwd(), stdout: process.stdout })
+commands.run = args => run(args, nodeEnv)
+commands.build = args => build({..._argv(args), ...nodeEnv})
+
+// Future Demo
+/*
 commands.registry = async args => {
   const subcommand = args.shift()
   const cmd = registry[subcommand]
@@ -38,8 +45,10 @@ commands.serve = async args => {
   })
   console.log(`Serving ${filename} on http://localhost:8282`)
 }
-const _argv = argv({})
 commands.seed = async args => seed(await _argv(args))
+*/
+
+const _argv = argv({})
 
 if (!command || !commands[command] || helpflags.includes(command)) help()
 

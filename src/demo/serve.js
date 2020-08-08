@@ -1,6 +1,6 @@
-import pathToUrl from './path-to-url.js'
-import nodeAPI from './api.js'
-import { fromModule } from './util.js'
+import pathToUrl from '../path-to-url.js'
+import nodeAPI from '../api.js'
+import { fromModule } from '../util.js'
 import http from 'http'
 
 const _parse = val => {

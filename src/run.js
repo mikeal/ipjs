@@ -1,8 +1,8 @@
 import pathToUrl from './path-to-url.js'
 import api from './api.js'
-import IPFS from 'ipfs'
+// import IPFS from 'ipfs'
 import Block from '@ipld/block/defaults.js'
-import { client } from './registry/index.js'
+import { client } from './demo/registry/index.js'
 import { fromModule } from './util.js'
 import { promises as fs } from 'fs'
 
@@ -30,6 +30,7 @@ const run = async (args, { onConsole, cwd, stdout }) => {
   const target = args.shift()
   if (!target) throw new Error('Missing target file or package name in registry')
   let module
+  /*
   if (target.startsWith('ipfs:')) {
     const cid = target.slice('ipfs:'.length)
     const ipfs = await getIPFS(cid)
@@ -37,7 +38,9 @@ const run = async (args, { onConsole, cwd, stdout }) => {
     const block = Block.create(buffer.data, buffer.cid.toString())
     const pkg = block.decode()
     module = await fromPackage(pkg)
-  } else if (target.startsWith('@')) {
+  } else
+  */
+  if (target.startsWith('@')) {
     const name = target.slice('@ipjs/'.length)
     const pkg = await client({ name, url: 'http://localhost:8080' })
     module = await fromPackage(pkg)
