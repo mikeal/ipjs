@@ -7,5 +7,6 @@ export default async opts => {
     if (opts.args.length) throw new Error('Not supported: multiple build sources')
   }
   const pkg = await packager(opts)
-  console.log({pkg})
+  await pkg.deflate(resolve('dist'))
+  console.log({ pkg })
 }

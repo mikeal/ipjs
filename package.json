@@ -26,6 +26,8 @@
     "dagdb": "^0.9.3",
     "ipfs": "^0.48.1",
     "acorn": "^7.3.1",
-    "astring": "^1.4.3"
+    "astring": "^1.4.3",
+    "@tgrajewski/rmtree": "^1.0.1",
+    "rollup": "^2.23.1"
   }
 }

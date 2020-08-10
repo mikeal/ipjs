@@ -1,12 +1,8 @@
 import acorn from 'acorn'
-import astring from 'astring'
 import { promises as fs } from 'fs'
-import path from '../path-to-url.js'
+import worker from './worker.js'
 
 const { parse } = acorn
-const { generate } = astring
-
-const copy = o => JSON.parse(JSON.stringify(o))
 
 class File {
   constructor (pkg, url) {
@@ -14,13 +10,12 @@ class File {
     this.url = url
     this.parsed = this.parse()
   }
+
   async parse () {
     if (this.parsed) throw new Error(`Already parsed this file ${this.url}`)
     const data = await fs.readFile(this.url)
 
     const program = parse(data, { sourceType: 'module' })
-    const esm = copy(program)
-    const cjs = copy(program)
 
     this.imports = new Map()
 
@@ -30,21 +25,35 @@ class File {
         if (node.source.value.startsWith('.')) {
           const url = new URL(node.source.value, this.url)
           this.imports.set(node.source.value, this.pkg.file(url))
-          const l = node.source.value.length
-
-          // re-write cjs import to use extension
-          const source = cjs.body[i].source
-          source.value = source.value.slice(0, l - '.js'.length) + '.cjs'
-          const s = source.raw[0]
-          source.raw = [s, source.value, s].join('')
-          console.log(cjs.body[i])
         } else {
-          console.log({node})
+          console.log({ node })
           throw new Error('Not implemented')
         }
       }
     }
-    console.log(generate(cjs))
+    this.data = worker(program)
+    return this
+  }
+
+  async deflate (dist) {
+    const data = await this.data
+    const input = { input: this.url.toString() }
+    const output = { format: 'cjs' }
+    const rel = this.pkg.relative(this)
+    await Promise.all([
+      this.writeFile(new URL('esm/' + rel, dist), data),
+      this.writeFile(new URL('cjs/' + rel, dist), data) // TODO: replace with cjs compile
+    ])
+    return this
+  }
+
+  async writeFile (url, data) {
+    const str = url.toString()
+    const dir = str.slice(0, str.lastIndexOf('/'))
+    await fs.mkdir(new URL(dir), { recursive: true }).catch(e => {
+      console.error(e)
+    })
+    return fs.writeFile(url, data)
   }
 }
 

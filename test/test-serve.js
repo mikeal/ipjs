@@ -34,14 +34,14 @@ const setup = async (test, filename) => {
 
 const query = (url, opts) => {
   const get = bent(url, 'json')
-  const query = [...Object.entries(opts)].map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join('&')
+  const query = [...Object.entries(opts)].map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&')
   return get('?' + query)
 }
 
 export default test => {
   test('default', async test => {
     const url = await setup(test, 'test/fixtures/default.js')
-    const ret = await query(url, {bool: true})
+    const ret = await query(url, { bool: true })
     same(ret.bool, true)
   })
 }

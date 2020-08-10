@@ -18,7 +18,7 @@ const serve = async opts => {
 serve.schema = { host: 'localhost', port: 8080 }
 
 const publish = async opts => {
-  const { url, args: [ file, ...names ] } = opts
+  const { url, args: [file, ...names] } = opts
   if (!file) throw new Error('Missing filename to publish')
   if (!names.length) throw new Error('Missing publish names')
   const db = await dagdb.open(url)
@@ -38,7 +38,7 @@ const publish = async opts => {
 publish.schema = { url: 'http://localhost:8080' }
 
 const client = async opts => {
-  opts = { ...client.schema, ...opts}
+  opts = { ...client.schema, ...opts }
   if (!opts.name) throw new Error('Missing required argument "name"')
   const db = await dagdb.open(opts.url)
   const pkg = await db.get(opts.name)

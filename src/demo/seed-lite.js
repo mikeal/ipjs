@@ -6,10 +6,10 @@ const { Peer, BlockStore, Block } = ipfs
 const { setupLibP2PHost } = setup
 const { MemoryDatastore } = storage
 
-let store = new BlockStore(new MemoryDatastore())
+const store = new BlockStore(new MemoryDatastore())
 
 const seed = async opts => {
-  const { args: [ filename ] } = opts
+  const { args: [filename] } = opts
   let last
   for await (const block of pkg(filename)) {
     const data = block.encode()
@@ -19,7 +19,7 @@ const seed = async opts => {
   }
   const cid = await last.cid()
   const lite = new Peer(store)
-  console.log({lite})
+  console.log({ lite })
   await lite.start()
   console.log(`Seeding ipfs:${cid.toString()}`)
 }

@@ -1,7 +1,7 @@
+import * as mod from 'pkg-kitchensink'
+
 var window
 const type = window ? window.Deno ? 'deno' : 'browser' : 'import'
-
-import * as mod from 'pkg-kitchensink'
 
 const same = (x, y) => x === y
 

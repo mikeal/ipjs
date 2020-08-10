@@ -14,7 +14,7 @@ const _parse = val => {
 }
 
 const q = qs => qs.split('&').map(s => {
-  const [k, v ] = s.split('=')
+  const [k, v] = s.split('=')
   return [k, _parse(v)]
 })
 
@@ -22,10 +22,10 @@ const parseArgs = async req => {
   if (req.method === 'GET') {
     // TODO: replace all the qs parsing with something more resilient
     if (req.url.includes('?')) {
-      const [ , query ] = req.url.split('?')
+      const [, query] = req.url.split('?')
       const opts = Object.fromEntries(q(query))
       return opts
-     }
+    }
     return []
   } else {
     throw new Error('Not Implemented')

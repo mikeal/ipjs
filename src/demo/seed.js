@@ -3,7 +3,7 @@ import IPFS from 'ipfs'
 
 const seed = async opts => {
   const ipfs = await IPFS.create()
-  const { args: [ filename ] } = opts
+  const { args: [filename] } = opts
   let last
   for await (const block of pkg(filename)) {
     const data = block.encode()
