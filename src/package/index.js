@@ -8,8 +8,9 @@ import rmtree from '@tgrajewski/rmtree'
 const copy = o => JSON.parse(JSON.stringify(o))
 
 class Package {
-  constructor ({ cwd }) {
+  constructor ({ cwd, hooks }) {
     this.cwd = cwd
+    this.hooks = hooks || {}
     this.parsed = this.parse()
     this.files = new Map()
   }
@@ -17,7 +18,7 @@ class Package {
   file (url) {
     const key = url.toString()
     if (!this.files.has(key)) {
-      this.files.set(key, file(this, url))
+      this.files.set(key, file(this, url, this.hooks))
     }
     return this.files.get(key)
   }
@@ -72,7 +73,7 @@ class Package {
   async deflate (dist) {
     rmtree(dist)
     dist = path(dist)
-    const { mkdir, rmdir, writeFile } = fs
+    const { mkdir, writeFile } = fs
     await mkdir(dist)
     await mkdir(new URL(dist + '/cjs'))
     await mkdir(new URL(dist + '/esm'))
@@ -100,12 +101,12 @@ class Package {
     const typeModule = '{ "type" : "module" }'
     pending.push(writeFile(new URL(dist + '/esm/package.json'), typeModule))
     files = await files
-    console.log(files)
+    return files
+  }
+  async close () {
+    const files = await Promise.all([...this.files.values()])
+    files.forEach(f => f.worker.worker.unref())
   }
 }
 
-export default async opts => {
-  const pkg = new Package(opts)
-  await pkg.parsed
-  return pkg
-}
+export default opts => (new Package(opts)).parsed

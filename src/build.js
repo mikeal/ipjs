@@ -6,7 +6,15 @@ export default async opts => {
     opts.cwd = resolve(opts.args.shift())
     if (opts.args.length) throw new Error('Not supported: multiple build sources')
   }
-  const pkg = await packager(opts)
+  const print = key => f => console.log(key, f.url.toString())
+  opts.hooks = {
+    onParse: print('parsing'),
+    onParsed: print('parsed'),
+    onDeflateStart: print('deflating'),
+    onDeflateEnd: print('deflated')
+  }
+  let pkg = await packager(opts)
+  await pkg.parsed
   await pkg.deflate(resolve('dist'))
-  console.log({ pkg })
+  await pkg.close()
 }
