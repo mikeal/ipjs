@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import argv from './src/argv.js'
-import run from './src/run.js'
 import build from './src/build.js'
+// import run from './src/run.js'
 // import { createServer } from './src/serve.js'
 // import seed from './src/seed.js'
 // import api from './src/api.js'
@@ -22,7 +22,7 @@ const helpflags = ['--help', '-h']
 const nodeEnv = { onConsole: console.log, cwd: process.cwd(), stdout: process.stdout }
 
 commands.help = help
-commands.run = args => run(args, nodeEnv)
+// commands.run = args => run(args, nodeEnv)
 
 // Future Demo
 /*
