@@ -3,6 +3,7 @@ import { fileURLToPath, pathToFileURL } from 'url'
 import { promises as fs } from 'fs'
 import acorn from 'acorn'
 import astring from 'astring'
+import convert from 'esm-ast-to-cjs'
 
 const { parse } = acorn
 const { generate } = astring
@@ -88,6 +89,7 @@ const run = async () => {
     parentPort.postMessage({ id, ret })
   })
   parentPort.postMessage({ id: 'init', ret: imports })
+  convert(cjs)
   cjsCompile = generate(cjs)
   esmCompile = generate(program)
 }

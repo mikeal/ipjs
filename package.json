@@ -28,6 +28,7 @@
     "acorn": "^7.3.1",
     "astring": "^1.4.3",
     "@tgrajewski/rmtree": "^1.0.1",
-    "rollup": "^2.23.1"
+    "rollup": "^2.23.1",
+    "esm-ast-to-cjs": "^0.0.1"
   }
 }
