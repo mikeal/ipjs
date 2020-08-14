@@ -1,0 +1,21 @@
+{
+  "name": "pkg-kitchensink",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
+  "license": "(Apache-2.0 AND MIT)",
+  "exports": {
+    ".": {
+      "require": "cjs/src/index.js",
+      "import": "esm/src/index.js",
+      "browser": "esm/src/browser.js"
+    }
+  },
+  "browser": {
+    ".": "cjs/src/browser.js"
+  }
+}

@@ -71,8 +71,8 @@ class Package {
   }
 
   async deflate (dist) {
-    rmtree(dist)
-    dist = path(dist)
+    if (!(dist instanceof URL)) dist = path(dist)
+    rmtree(fileURLToPath(dist))
     const { mkdir, writeFile } = fs
     await mkdir(dist)
     await mkdir(new URL(dist + '/cjs'))

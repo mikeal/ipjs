@@ -1,15 +1,14 @@
 {
   "name": "ipjs",
-  "version": "2.0.0",
-  "description": "",
-  "main": "argv.js",
+  "version": "3.0.0",
+  "description": "Universal JavaScript build and packaging system",
+  "main": "src/build.js",
   "type": "module",
-  "imports": {
-    "#ipjs/run": "./src/run.js"
+  "bin": {
+    "ipjs": "cli.js"
   },
   "scripts": {
-    "test": "estest test/test-*.js",
-    "build:schema": "ipld-schema to-json README.md > src/pkg/schema.json"
+    "test": "estest test/test-*.js"
   },
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
@@ -19,16 +18,13 @@
     "estest": "^10.3.0",
     "get-port": "^5.1.1",
     "ipld-schema": "^0.3.2",
-    "standard": "^14.3.4"
+    "standard": "^14.3.4",
+    "tempy": "^0.6.0"
   },
   "dependencies": {
-    "@ipld/block": "^6.0.1",
-    "dagdb": "^0.9.3",
-    "ipfs": "^0.48.1",
     "acorn": "^7.3.1",
     "astring": "^1.4.3",
     "@tgrajewski/rmtree": "^1.0.1",
-    "rollup": "^2.23.1",
     "esm-ast-to-cjs": "^0.0.1"
   }
 }
