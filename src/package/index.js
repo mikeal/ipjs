@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs'
 import { rollup } from 'rollup'
 import file from './file.js'
+import testFile from './testFile.js'
 import path from '../path-to-url.js'
 import { fileURLToPath } from 'url'
 import { join } from 'path'
@@ -9,14 +10,16 @@ import rmtree from '@tgrajewski/rmtree'
 const copy = o => JSON.parse(JSON.stringify(o))
 const vals = Object.values
 
-const { writeFile, mkdir, unlink } = fs
+const { writeFile, mkdir, unlink, readdir, readFile } = fs
 
 class Package {
-  constructor ({ cwd, hooks }) {
+  constructor ({ cwd, hooks, tests }) {
     this.cwd = cwd
     this.hooks = hooks || {}
     this.parsed = this.parse()
     this.files = new Map()
+    this.testFiles = new Map()
+    this.includeTests = tests
   }
 
   file (url) {
@@ -30,8 +33,7 @@ class Package {
   async parse () {
     if (this.parsed) throw new Error('Already parsed/parsing')
     const toURL = s => path(s, this.cwd)
-    const pkgjson = await fs.open(toURL('package.json'))
-    const json = JSON.parse((await pkgjson.readFile()).toString())
+    const json = JSON.parse((await readFile(toURL('package.json'))).toString())
     this.pkgjson = json
 
     if (json.type !== 'module') throw new Error('Unsupported: package.json must have "type: module"')
@@ -59,12 +61,50 @@ class Package {
             }
             exports[key][ex] = this.file(toURL(str))
           }
+          for (const [key, value] of Object.entries(exports)) {
+            if (!value.import) throw new Error(`Must specify an "import" target for the "${key}" export`)
+          }
         }
       }
     }
     this.exports = exports
-    await Promise.all([...this.files.values()])
+    const testFiles = await this.getTestFiles()
+    this.tests = new Map(testFiles.map(k => [k, this.testFile(toURL(k))]))
+    await Promise.all([...this.files.values(), ...this.testFiles.values()])
     return this
+  }
+
+  async testFile (url) {
+    const key = url.toString()
+    if (!this.testFiles.has(key)) {
+      this.testFiles.set(key, testFile(this, url, this.hooks))
+    }
+    return this.testFiles.get(key)
+  }
+
+  exported (ex) {
+    const { name } = this.pkgjson
+    let key
+    if (ex === name) key = '.'
+    else key = './' + ex.slice(name.length + '/'.length)
+    if (!this.pkgjson.exports[key]) throw new Error(`No export named "${ex}"`)
+    return this.pkgjson.exports[key]
+  }
+
+  async getTestFiles () {
+    const files = await readdir(this.cwd)
+    const testFiles = []
+    if (files.includes('test.js')) testFiles.push('test.js')
+    const parseDir = async dir => {
+      const files = await readdir(this.cwd + '/' + dir)
+      files.filter(f => f.endsWith('.js')).forEach(f => testFiles.push(dir + '/' + f))
+    }
+    for (const name of ['test', 'tests']) {
+      if (files.includes(name)) {
+        await parseDir(name)
+      }
+    }
+    return testFiles
   }
 
   relative (file) {

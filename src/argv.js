@@ -67,7 +67,12 @@ export default schema => {
           const [k, v] = part.split('=')
           promises.push(handle(k, v))
         } else {
-          const value = argv.shift()
+          let value
+          if (schema[part] && schema[part].type === 'boolean') {
+            // noop
+          } else {
+            value = argv.shift()
+          }
           promises.push(handle(part, value))
         }
       } else if (part.startsWith('-')) {

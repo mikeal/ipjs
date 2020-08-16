@@ -15,6 +15,9 @@
       "import": "./src/index.js",
       "browser": "./src/browser.js",
       "deno": "./src/deno.js"
+    },
+    "./secondary": {
+      "import": "./src/secondary.js"
     }
   }
 }

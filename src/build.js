@@ -1,7 +1,7 @@
 import packager from './package/index.js'
 import { resolve } from 'path'
 
-export default async opts => {
+const run = async opts => {
   if (opts.args && opts.args.length) {
     opts.cwd = resolve(opts.args.shift())
     if (opts.args.length) {
@@ -20,5 +20,9 @@ export default async opts => {
   }
   let pkg = await packager(opts)
   await pkg.parsed
-  await pkg.deflate(opts.dist || resolve('dist'))
+  const dist = opts.dist || resolve('dist')
+  await pkg.deflate(dist)
 }
+run.schema = { tests: false }
+
+export default run

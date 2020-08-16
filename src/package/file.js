@@ -35,7 +35,7 @@ class File {
     this.onParse(this)
 
     const data = await readFile(this.url)
-    const program = parse(data, { sourceType: 'module' })
+    const program = parse(data, { sourceType: 'module', ecmaVersion: 2020 })
 
     const imports = []
 
@@ -72,8 +72,12 @@ class File {
   }
 }
 
-export default async (pkg, url, hooks) => {
+const create = async (pkg, url, hooks) => {
   const file = new File(pkg, url, hooks)
   await file.parsed
   return file
 }
+create.File = File
+create.writeFile = _writeFile
+
+export default create

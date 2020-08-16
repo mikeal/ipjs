@@ -49,7 +49,7 @@ commands.seed = async args => seed(await _argv(args))
 
 const _argv = argv({})
 
-commands.build = async args => build({ ...await _argv(args), ...nodeEnv })
+commands.build = async args => build({ ...await argv(build.schema)(args), ...nodeEnv })
 
 if (!command || !commands[command] || helpflags.includes(command)) help()
 

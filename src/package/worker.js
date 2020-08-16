@@ -30,6 +30,7 @@ class Compiler {
       this.handles.set(id, [resolve, reject])
     })
   }
+
   deflate (...args) {
     const id = Math.random()
     this.worker.postMessage({ id, cmd: 'deflate', args })
