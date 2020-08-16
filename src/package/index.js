@@ -116,7 +116,6 @@ class Package {
 
   async deflateCJS (dist) {
     const files = await Promise.all(vals(this.exports).map(vals).flat())
-    // TODO: add tests
     const paths = [...new Set(files.map(f => this.relative(f)))]
     const code = paths.map(p => `import("${p}")`).join('\n')
     const input = new URL(dist + '/esm/_ipjsInput.js')
@@ -125,6 +124,7 @@ class Package {
     const dir = fileURLToPath(new URL(dist + '/cjs'))
     await compile.write({ preserveModules: true, dir })
     await unlink(input)
+    await unlink(new URL(dist + '/cjs/_ipjsInput.js'))
   }
 
   async deflate (dist) {

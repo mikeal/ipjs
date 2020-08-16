@@ -30,5 +30,6 @@ export default async test => {
       }
     }
     await verify(new URL('./output-notests', url), dist)
+    await verify(dist, new URL('./output-notests', url))
   })
 }
