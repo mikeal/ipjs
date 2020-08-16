@@ -68,9 +68,13 @@ class Package {
       }
     }
     this.exports = exports
-    const testFiles = await this.getTestFiles()
-    this.tests = new Map(testFiles.map(k => [k, this.testFile(toURL(k))]))
-    await Promise.all([...this.files.values(), ...this.testFiles.values()])
+    let promises = [...this.files.values()]
+    if (this.includeTests) {
+      const testFiles = await this.getTestFiles()
+      this.tests = new Map(testFiles.map(k => [k, this.testFile(toURL(k))]))
+      promises = [...promises, ...this.testFiles.values()]
+    }
+    await Promise.all(promises)
     return this
   }
 

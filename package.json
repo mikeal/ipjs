@@ -13,6 +13,9 @@
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
+  "standard": {
+    "ignore": [ "test" ]
+  },
   "devDependencies": {
     "bent": "^7.3.9",
     "estest": "^10.3.1",

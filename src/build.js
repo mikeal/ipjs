@@ -18,7 +18,7 @@ const run = async opts => {
       onDeflateEnd: print('deflated')
     }
   }
-  let pkg = await packager(opts)
+  const pkg = await packager(opts)
   await pkg.parsed
   const dist = opts.dist || resolve('dist')
   await pkg.deflate(dist)
