@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs'
+import { rollup } from 'rollup'
 import file from './file.js'
 import path from '../path-to-url.js'
 import { fileURLToPath } from 'url'
@@ -6,6 +7,9 @@ import { join } from 'path'
 import rmtree from '@tgrajewski/rmtree'
 
 const copy = o => JSON.parse(JSON.stringify(o))
+const vals = Object.values
+
+const { writeFile, mkdir, unlink } = fs
 
 class Package {
   constructor ({ cwd, hooks }) {
@@ -70,15 +74,29 @@ class Package {
     return './' + rel
   }
 
+  async deflateCJS (dist) {
+    const files = await Promise.all(vals(this.exports).map(vals).flat())
+    // TODO: add tests
+    const paths = [...new Set(files.map(f => this.relative(f)))]
+    const code = paths.map(p => `import("${p}")`).join('\n')
+    const input = new URL(dist + '/esm/_ipjsInput.js')
+    await writeFile(input, code)
+    const compile = await rollup({ input: fileURLToPath(input), treeshake: false })
+    const dir = fileURLToPath(new URL(dist + '/cjs'))
+    await compile.write({ preserveModules: true, dir })
+    await unlink(input)
+  }
+
   async deflate (dist) {
     if (!(dist instanceof URL)) dist = path(dist)
     rmtree(fileURLToPath(dist))
-    const { mkdir, writeFile } = fs
     await mkdir(dist)
     await mkdir(new URL(dist + '/cjs'))
     await mkdir(new URL(dist + '/esm'))
 
     const pending = [...this.files.values()].map(p => p.then(f => f.deflate(dist)))
+    await Promise.all(pending)
+    await this.deflateCJS(dist)
 
     const json = copy(this.pkgjson)
 
@@ -102,10 +120,6 @@ class Package {
     pending.push(writeFile(new URL(dist + '/esm/package.json'), typeModule))
     files = await files
     return files
-  }
-  async close () {
-    const files = await Promise.all([...this.files.values()])
-    files.forEach(f => f.worker.worker.unref())
   }
 }
 

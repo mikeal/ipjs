@@ -3,7 +3,7 @@ import { fileURLToPath, pathToFileURL } from 'url'
 import { promises as fs } from 'fs'
 import acorn from 'acorn'
 import astring from 'astring'
-import convert from 'esm-ast-to-cjs'
+import convert from '../../../esm-ast-to-cjs/index.js'
 
 const { parse } = acorn
 const { generate } = astring

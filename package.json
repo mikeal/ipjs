@@ -14,7 +14,7 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
-    "bent": "^7.3.7",
+    "bent": "^7.3.9",
     "estest": "^10.3.0",
     "get-port": "^5.1.1",
     "ipld-schema": "^0.3.2",
@@ -22,9 +22,10 @@
     "tempy": "^0.6.0"
   },
   "dependencies": {
-    "acorn": "^7.3.1",
+    "acorn": "^8.0.1",
     "astring": "^1.4.3",
     "@tgrajewski/rmtree": "^1.0.1",
-    "esm-ast-to-cjs": "^0.0.1"
+    "esm-ast-to-cjs": "^0.0.2",
+    "rollup": "^2.26.2"
   }
 }

@@ -21,5 +21,4 @@ export default async opts => {
   let pkg = await packager(opts)
   await pkg.parsed
   await pkg.deflate(opts.dist || resolve('dist'))
-  await pkg.close()
 }
