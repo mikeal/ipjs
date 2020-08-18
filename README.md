@@ -1,41 +1,37 @@
+# Universal JavaScript Build and Packaging
 
-# Schema
+This is a toolchain for the next phase of JavaScript development. It
+enables developers to write JavaScript modules in ESM that work
+universally across many environments (Node.js import, Node.js require,
+Browser, Deno, etc).
 
-The directory layout of every package directory looks something like:
+You start by just writing a standard ESM module. You'll need to include
+`"type": "module"` in your package.json, as well as a `"main"` entry
+point or an export map.
 
 ```
-/mypkg
-/mypkg/index.js // imports '#ipjs/two'
-/two/index.js
+npx ipjs build
 ```
 
-Every target is its own directory like this, we don't worry about
-overlap in the file contents because DAG de-duplication takes care of this
-for us.
+This will build a package in the `dist` directory that has different
+versions of your files compiled for different environments and a
+new package.json file that exposes all of these files to the correct
+Node.js and compiler entry points.
 
-This means that an import of `'#ipjs/two'` is re-written simply as `../two/index.js`
-for Node.js.
+That's it ;)
 
-The `broswer-ipjs` build is slightly different. It links every file to `/_ipjs/CID.js`
-for maximal caching in the browser.
+You can also compile a your tests.
 
-```sh
-type Dependencies { String: Package }
-
-# Directory is a UnixFSv2 directory
-type Package struct {
-  name String
-  deps Dependencies
-
-  lambda optional Directory
-  nodejs-esm optional Directory
-  nodejs-cjs optional Directory
-  deno optional Directory
-  browser optional Directory
-  browser-esm optional Directory
-  browser-ipjs optional Directory
-}
+```
+npx ipjs build --tests
 ```
 
-From all this we can also output a package for npm that works across every environment
-using a mix of entry point fields in package.json and a lot of mostly duplicated files.
+Note: You'll need to use "named self imports", `import mymodule from "mymodule"`,
+in your tests so that we can compile different CJS versions of those test for
+Node.js and the browser.
+
+You can publish to by either running `npm publish` in the dist directory or using:
+
+```
+npx ipjs publish
+```
