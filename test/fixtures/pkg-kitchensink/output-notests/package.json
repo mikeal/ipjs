@@ -13,9 +13,15 @@
       "require": "cjs/src/index.js",
       "import": "esm/src/index.js",
       "browser": "esm/src/browser.js"
+    },
+    "./secondary": {
+      "require": "cjs/src/secondary.js",
+      "import": "esm/src/secondary.js",
+      "browser": "esm/src/secondary.js"
     }
   },
   "browser": {
-    ".": "cjs/src/browser.js"
+    ".": "cjs/src/browser.js",
+    "./secondary": "cjs/src/secondary.js"
   }
 }

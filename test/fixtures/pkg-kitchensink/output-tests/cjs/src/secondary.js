@@ -1,3 +1,5 @@
+'use strict';
+
 var secondary = 'secondary';
 
-export default secondary;
+module.exports = secondary;

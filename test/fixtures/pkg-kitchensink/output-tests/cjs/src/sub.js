@@ -1,1 +1,5 @@
-module.exports = 'sub'
+'use strict';
+
+var sub = 'sub';
+
+module.exports = sub;

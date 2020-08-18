@@ -1,1 +1,5 @@
-module.exports = 'import'
+'use strict';
+
+var index = 'import';
+
+module.exports = index;

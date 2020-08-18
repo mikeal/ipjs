@@ -1,1 +1,5 @@
-module.exports = 'browser'
+'use strict';
+
+var browser = 'browser';
+
+module.exports = browser;

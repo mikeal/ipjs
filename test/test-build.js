@@ -18,9 +18,9 @@ export default async test => {
       if (stat.isDirectory()) {
         await verify(url, inputURL)
       } else {
-        const valid = fs.readFile(url)
-        const data = fs.readFile(inputURL)
-        same(valid, data)
+        const valid = await fs.readFile(url)
+        const data = await fs.readFile(inputURL)
+        same(valid.toString(), data.toString())
       }
     }
   }
