@@ -20,7 +20,7 @@ Node.js and compiler entry points.
 
 That's it ;)
 
-You can also compile a your tests.
+You can also compile your tests.
 
 ```
 npx ipjs build --tests
