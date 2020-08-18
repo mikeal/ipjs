@@ -166,15 +166,16 @@ class Package {
     delete json.main
     json.browser = {}
     json.exports = {}
+    const _join = (...args) => './' + join(...args)
     for (const [key, ex] of Object.entries(this.exports)) {
       const _import = this.relative(await ex.import)
       const _browser = ex.browser ? this.relative(await ex.browser) : _import
       json.exports[key] = {
-        require: join('cjs', _import),
-        import: join('esm', _import),
-        browser: join('esm', _browser)
+        require: _join('cjs', _import),
+        import: _join('esm', _import),
+        browser: _join('esm', _browser)
       }
-      json.browser[key] = join('cjs', _browser)
+      json.browser[key] = _join('cjs', _browser)
     }
     let files = Promise.all(pending)
     pending.push(writeFile(new URL(dist + '/package.json'), JSON.stringify(json, null, 2)))
