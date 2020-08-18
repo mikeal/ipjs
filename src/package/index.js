@@ -121,12 +121,27 @@ class Package {
   async deflateCJS (dist) {
     const files = await Promise.all(vals(this.exports).map(vals).flat())
     const paths = [...new Set(files.map(f => this.relative(f)))]
+    if (this.includeTests) {
+      let t = await Promise.all([...this.testFiles.values()])
+      t = new Set(t.map(f => this.relative(f)))
+      for (const rel of t) {
+        paths.push(...['./browser-', './node-'].map(n => n + rel.slice(2)))
+      }
+    }
     const code = paths.map(p => `import("${p}")`).join('\n')
     const input = new URL(dist + '/esm/_ipjsInput.js')
     await writeFile(input, code)
-    const compile = await rollup({ input: fileURLToPath(input), treeshake: false })
+    const onwarn = warning => {
+      const skips = [ 'PREFER_NAMED_EXPORTS' ]
+      if (skips.includes(warning.code)) {
+        // noop
+      } else {
+        console.log(warning.message)
+      }
+    }
+    const compile = await rollup({ input: fileURLToPath(input), treeshake: false, onwarn })
     const dir = fileURLToPath(new URL(dist + '/cjs'))
-    await compile.write({ preserveModules: true, dir })
+    await compile.write({ preserveModules: true, dir, format: 'cjs' })
     await unlink(input)
     await unlink(new URL(dist + '/cjs/_ipjsInput.js'))
   }
@@ -139,6 +154,9 @@ class Package {
     await mkdir(new URL(dist + '/esm'))
 
     const pending = [...this.files.values()].map(p => p.then(f => f.deflate(dist)))
+    if (this.includeTests) {
+      pending.push(...[...this.testFiles.values()].map(p => p.then(f => f.deflate(dist))))
+    }
     await Promise.all(pending)
     await this.deflateCJS(dist)
 

@@ -35,18 +35,26 @@ class TestFile extends File {
         const { value } = source
         if (value === name || value.startsWith(name + '/')) {
           const exported = this.pkg.exported(value)
+          const rel = p => {
+            const u = pathToFileURL(this.pkg.cwd)
+            const r = this.url.toString().slice(u.toString().length + 1)
+            const pre = (r.match(/\//g) || []).map(() => '../').join('')
+            if (!pre.length) pre = './'
+            return pre + p.slice(2)
+          }
           const rewrite = val => {
             const n = { ...node, source: { ...source } }
             n.source.value = val
             n.source.raw = `"${val}"`
             return n
           }
+          rel(exported.import)
           if (exported.browser) {
-            esmBrowser.body.push(rewrite(exported.browser))
+            esmBrowser.body.push(rewrite(rel(exported.browser)))
           } else {
-            esmBrowser.body.push(rewrite(exported.import))
+            esmBrowser.body.push(rewrite(rel(exported.import)))
           }
-          esmNode.body.push(rewrite(exported.import))
+          esmNode.body.push(rewrite(rel(exported.import)))
         } else {
           push(node)
         }
@@ -90,12 +98,12 @@ class TestFile extends File {
   }
 
   async deflate (dist) {
-    throw new Error('not implemented')
     const { cwd } = this.pkg
     const path = fileURLToPath(this.url)
     if (!path.startsWith(cwd)) throw new Error('File is not in source directory')
-    const rel = path.slice(cwd.length + 1)
-    return _writeFile(new URL(dist + '/esm/' + rel), this.esm)
+    let rel = path.slice(cwd.length + 1)
+    await writeFile(new URL(dist + '/esm/browser-' + rel), this.esmBrowser)
+    await writeFile(new URL(dist + '/esm/node-' + rel), this.esmNode)
   }
 }
 
