@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import argv from './src/argv.js'
 import build from './src/build.js'
+import { execSync } from 'child_process'
 // import run from './src/run.js'
 // import { createServer } from './src/serve.js'
 // import seed from './src/seed.js'
@@ -50,6 +51,11 @@ commands.seed = async args => seed(await _argv(args))
 const _argv = argv({})
 
 commands.build = async args => build({ ...await argv(build.schema)(args), ...nodeEnv })
+
+commands.publish = async args => {
+  const pkg = await commands.build(args)
+  // execSync('npm publish', { cwd: pkg.cwd })
+}
 
 if (!command || !commands[command] || helpflags.includes(command)) help()
 
