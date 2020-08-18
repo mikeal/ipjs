@@ -27,7 +27,7 @@ npx ipjs build --tests
 ```
 
 Note: You'll need to use "named self imports", `import mymodule from "mymodule"`,
-in your tests so that we can compile different CJS versions of those test for
+in your tests so that we can compile different CJS versions of those tests for
 Node.js and the browser.
 
 You can publish to by either running `npm publish` in the dist directory or using:
