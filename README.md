@@ -7,7 +7,7 @@ Browser, Deno, etc).
 
 You start by just writing a standard ESM module. You'll need to include
 `"type": "module"` in your package.json, as well as a `"main"` entry
-point or an export map.
+point or an [export map](https://nodejs.org/api/esm.html#esm_package_entry_points).
 
 ```
 npx ipjs build
