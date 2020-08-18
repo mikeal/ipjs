@@ -91,6 +91,12 @@ class Package {
     let key
     if (ex === name) key = '.'
     else key = './' + ex.slice(name.length + '/'.length)
+    if (!this.pkgjson.exports) {
+      throw new Error('Must define export map')
+    }
+    if (key === '.') {
+      if (this.pkgjson.exports.import) return this.pkgjson.exports
+    }
     if (!this.pkgjson.exports[key]) throw new Error(`No export named "${ex}"`)
     return this.pkgjson.exports[key]
   }
