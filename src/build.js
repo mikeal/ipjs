@@ -22,6 +22,7 @@ const run = async opts => {
   await pkg.parsed
   const dist = opts.dist || resolve('dist')
   await pkg.deflate(dist)
+  pkg.dist = dist
   return pkg
 }
 run.schema = { tests: false }

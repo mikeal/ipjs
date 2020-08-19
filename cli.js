@@ -54,7 +54,7 @@ commands.build = async args => build({ ...await argv(build.schema)(args), ...nod
 
 commands.publish = async args => {
   const pkg = await commands.build(args)
-  execSync('npm publish', { cwd: pkg.cwd })
+  execSync('npm publish', { cwd: pkg.dist })
 }
 
 if (!command || !commands[command] || helpflags.includes(command)) help()
