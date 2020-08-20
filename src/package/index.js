@@ -187,6 +187,7 @@ class Package {
     pending.push(writeFile(new URL(dist + '/package.json'), JSON.stringify(json, null, 2)))
     const typeModule = '{ "type" : "module" }'
     pending.push(writeFile(new URL(dist + '/esm/package.json'), typeModule))
+    await Promise.all(pending)
     files = await files
     return files
   }
