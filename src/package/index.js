@@ -185,6 +185,7 @@ class Package {
     }
     if (json.exports.import) {
       json.exports = json.exports.import
+      json.browser = json.browser.import
     }
     let files = Promise.all(pending)
     pending.push(writeFile(new URL(dist + '/package.json'), JSON.stringify(json, null, 2)))
