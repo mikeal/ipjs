@@ -183,6 +183,9 @@ class Package {
       }
       json.browser[key] = _join('cjs', _browser)
     }
+    if (json.exports.import) {
+      json.exports = json.exports.import
+    }
     let files = Promise.all(pending)
     pending.push(writeFile(new URL(dist + '/package.json'), JSON.stringify(json, null, 2)))
     const typeModule = '{ "type" : "module" }'
