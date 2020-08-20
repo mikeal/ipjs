@@ -2,6 +2,7 @@
 import argv from './src/argv.js'
 import build from './src/build.js'
 import { spawnSync } from 'child_process'
+import { promises as fs } from 'fs'
 // import run from './src/run.js'
 // import { createServer } from './src/serve.js'
 // import seed from './src/seed.js'
@@ -54,6 +55,7 @@ commands.build = async args => build({ ...await argv(build.schema)(args), ...nod
 
 commands.publish = async args => {
   const pkg = await commands.build(args)
+  await fs.copyFile(pkg.cwd + '/README.md', pkg.dist + '/README.md').catch(() => {})
   spawnSync('npm', ['publish', pkg.dist, '--verbose'], { stdio: 'inherit' })
 }
 
