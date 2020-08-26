@@ -10,6 +10,14 @@
   "scripts": {
     "test": "estest test/test-*.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeal/ipjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mikeal/ipjs/issues"
+  },
+  "homepage": "https://github.com/mikeal/ipjs",
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
