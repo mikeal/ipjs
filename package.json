@@ -1,6 +1,6 @@
 {
   "name": "ipjs",
-  "version": "3.0.0",
+  "version": "0.0.0-dev",
   "description": "Universal JavaScript build and packaging system",
   "main": "src/build.js",
   "type": "module",
