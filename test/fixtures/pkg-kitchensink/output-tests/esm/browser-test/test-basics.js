@@ -1,5 +1,5 @@
-import * as mod from "../src/browser.js";
-import secondary from "../src/secondary.js";
+import * as mod from '../src/browser.js';
+import secondary from '../src/secondary.js';
 import shared from './lib/shared.js';
 var window;
 const type = window ? window.Deno ? 'deno' : 'browser' : 'import';

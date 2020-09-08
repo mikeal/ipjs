@@ -1,13 +1,16 @@
 import { parse } from 'acorn'
-import astring from 'astring'
+import astring from 'escodegen'
 import { promises as fs } from 'fs'
 import { fileURLToPath, pathToFileURL } from 'url'
 import file from './file.js'
+import dynamicImports from './dynamicImports.js'
 
 const { File, writeFile } = file
 
 const { readFile, mkdir } = fs
 const { generate } = astring
+
+const stropts = { format: { indent: { style: '  ' } } }
 
 class TestFile extends File {
   async parse () {
@@ -63,9 +66,10 @@ class TestFile extends File {
         push(node)
       }
     }
+    dynamicImports(program).forEach(name => imports.push(name))
 
-    this.esmNode = generate(esmNode)
-    this.esmBrowser = generate(esmBrowser)
+    this.esmNode = generate(esmNode, stropts)
+    this.esmBrowser = generate(esmBrowser, stropts)
 
     this.imports = new Map()
     for (const value of imports) {

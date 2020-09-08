@@ -2,11 +2,13 @@ import { Worker, isMainThread, parentPort, workerData } from 'worker_threads'
 import { fileURLToPath, pathToFileURL } from 'url'
 import { promises as fs } from 'fs'
 import acorn from 'acorn'
-import astring from 'astring'
+import astring from 'escodegen'
 import convert from '../../../esm-ast-to-cjs/index.js'
 
 const { parse } = acorn
 const { generate } = astring
+const stropts = { format: { indent: { style: '  ' } } }
+
 const { writeFile, readFile, mkdir } = fs
 
 class Compiler {
@@ -91,8 +93,8 @@ const run = async () => {
   })
   parentPort.postMessage({ id: 'init', ret: imports })
   convert(cjs)
-  cjsCompile = generate(cjs)
-  esmCompile = generate(program)
+  cjsCompile = generate(cjs, stropts)
+  esmCompile = generate(program, stropts)
 }
 
 let mod = null

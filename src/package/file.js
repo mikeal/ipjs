@@ -1,10 +1,12 @@
 import { parse } from 'acorn'
-import astring from 'astring'
+import astring from 'escodegen'
 import { promises as fs } from 'fs'
 import { fileURLToPath } from 'url'
+import dynamicImports from './dynamicImports.js'
 
 const { writeFile, readFile, mkdir } = fs
 const { generate } = astring
+const stropts = { format: { indent: { style: '  ' } } }
 
 const noop = () => {}
 
@@ -45,8 +47,9 @@ class File {
         imports.push(node.source.value)
       }
     }
+    dynamicImports(program).forEach(name => imports.push(name))
 
-    this.esm = generate(program)
+    this.esm = generate(program, stropts)
 
     this.imports = new Map()
     for (const value of imports) {

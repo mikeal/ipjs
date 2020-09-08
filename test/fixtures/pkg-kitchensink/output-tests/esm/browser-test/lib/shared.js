@@ -1,2 +1,2 @@
-import * as mod from "../../src/browser.js";
+import * as mod from '../../src/browser.js';
 export default mod;

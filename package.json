@@ -34,9 +34,9 @@
   },
   "dependencies": {
     "acorn": "^8.0.1",
-    "astring": "^1.4.3",
     "@tgrajewski/rmtree": "^1.0.1",
     "esm-ast-to-cjs": "^0.0.2",
-    "rollup": "^2.26.2"
+    "rollup": "^2.26.2",
+    "escodegen": "^2.0.0"
   }
 }

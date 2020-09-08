@@ -145,6 +145,7 @@ class Package {
         console.log(warning.message)
       }
     }
+
     const compile = await rollup({ input: fileURLToPath(input), treeshake: false, onwarn })
     const dir = fileURLToPath(new URL(dist + '/cjs'))
     await compile.write({ preserveModules: true, dir, format: 'cjs' })
