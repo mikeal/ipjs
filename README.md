@@ -35,3 +35,15 @@ You can publish to by either running `npm publish` in the dist directory or usin
 ```
 npx ipjs publish
 ```
+
+## Requirements
+
+There's a few Node.js and ESM features you need to stick to using and a few you need
+to avoid. Some are because there just isn't a very good way to provide consistent representations
+and some are because we need some more explicit information about your library in order
+to detect the dependency tree and built it successfully.
+
+### Do not use mixed default default and named exports/imports
+
+### Only export individual files in export map (no directories or pattern matching)
+
