@@ -105,7 +105,7 @@ class TestFile extends File {
     const { cwd } = this.pkg
     const path = fileURLToPath(this.url)
     if (!path.startsWith(cwd)) throw new Error('File is not in source directory')
-    let rel = path.slice(cwd.length + 1)
+    const rel = path.slice(cwd.length + 1)
     await writeFile(new URL(dist + '/esm/browser-' + rel), this.esmBrowser)
     await writeFile(new URL(dist + '/esm/node-' + rel), this.esmNode)
   }

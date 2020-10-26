@@ -138,7 +138,7 @@ class Package {
     const input = new URL(dist + '/esm/_ipjsInput.js')
     await writeFile(input, code)
     const onwarn = warning => {
-      const skips = [ 'PREFER_NAMED_EXPORTS' ]
+      const skips = ['PREFER_NAMED_EXPORTS']
       if (skips.includes(warning.code)) {
         // noop
       } else {

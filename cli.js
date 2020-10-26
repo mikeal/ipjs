@@ -54,9 +54,15 @@ const _argv = argv({})
 commands.build = async args => build({ ...await argv(build.schema)(args), ...nodeEnv })
 
 commands.publish = async args => {
-  const pkg = await commands.build(args)
-  await fs.copyFile(pkg.cwd + '/README.md', pkg.dist + '/README.md').catch(() => {})
-  spawnSync('npm', ['publish', pkg.dist, '--verbose'], { stdio: 'inherit' })
+  const cwd = process.cwd() // we do not support positional options for cwd in publish
+  const packagejson = JSON.parse(await fs.readFile(cwd + '/package.json'))
+  if (packagejson.scripts.build) {
+    spawnSync('npm', ['run', 'build'], { stdio: 'inherit' })
+  } else {
+    await commands.build(args)
+    await fs.copyFile(cwd + '/README.md', cwd + '/dist/README.md').catch(() => {})
+  }
+  spawnSync('npm', ['publish', cwd + '/dist', '--verbose'], { stdio: 'inherit' })
 }
 
 if (!command || !commands[command] || helpflags.includes(command)) help()
