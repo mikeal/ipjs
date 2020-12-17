@@ -7,7 +7,7 @@ import dynamicImports from './dynamicImports.js'
 
 const { File, writeFile } = file
 
-const { readFile, mkdir } = fs
+const { readFile } = fs
 const { generate } = astring
 
 const stropts = { format: { indent: { style: '  ' } } }
@@ -41,7 +41,7 @@ class TestFile extends File {
           const rel = p => {
             const u = pathToFileURL(this.pkg.cwd)
             const r = this.url.toString().slice(u.toString().length + 1)
-            const pre = (r.match(/\//g) || []).map(() => '../').join('')
+            let pre = (r.match(/\//g) || []).map(() => '../').join('')
             if (!pre.length) pre = './'
             return pre + p.slice(2)
           }

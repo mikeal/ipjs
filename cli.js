@@ -49,8 +49,6 @@ commands.serve = async args => {
 commands.seed = async args => seed(await _argv(args))
 */
 
-const _argv = argv({})
-
 commands.build = async args => build({ ...await argv(build.schema)(args), ...nodeEnv })
 
 commands.publish = async args => {

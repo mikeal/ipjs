@@ -1,11 +1,12 @@
 import pathToUrl from './path-to-url.js'
 import api from './api.js'
 // import IPFS from 'ipfs'
-import Block from '@ipld/block/defaults.js'
+// import Block from '@ipld/block/defaults.js'
 import { client } from './demo/registry/index.js'
 import { fromModule } from './util.js'
-import { promises as fs } from 'fs'
+// import { promises as fs } from 'fs'
 
+/*
 const getIPFS = cid => IPFS.create({
   repo: `/tmp/ipjs-${cid}`,
   silent: true,
@@ -18,6 +19,7 @@ const getIPFS = cid => IPFS.create({
     }
   }
 })
+*/
 
 const fromPackage = pkg => {
   const buffer = Buffer.from(pkg.nodejs)
