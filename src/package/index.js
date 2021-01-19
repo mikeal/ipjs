@@ -6,11 +6,14 @@ import path from '../path-to-url.js'
 import { fileURLToPath } from 'url'
 import { join } from 'path'
 import rmtree from '@tgrajewski/rmtree'
+import preserveShebangs from 'rollup-plugin-preserve-shebangs'
 
 const copy = o => JSON.parse(JSON.stringify(o))
 const vals = Object.values
 
 const { writeFile, mkdir, unlink, readdir, readFile } = fs
+
+const plugins = [ preserveShebangs.preserveShebangs() ]
 
 class Package {
   constructor ({ cwd, hooks, tests }) {
@@ -146,7 +149,7 @@ class Package {
       }
     }
 
-    const compile = await rollup({ input: fileURLToPath(input), treeshake: false, onwarn })
+    const compile = await rollup({ input: fileURLToPath(input), treeshake: false, onwarn, plugins })
     const dir = fileURLToPath(new URL(dist + '/cjs'))
     await compile.write({ preserveModules: true, dir, format: 'cjs' })
     await unlink(input)
