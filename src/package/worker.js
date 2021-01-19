@@ -1,5 +1,5 @@
 import { Worker, isMainThread, parentPort, workerData } from 'worker_threads'
-import { fileURLToPath, pathToFileURL } from 'url'
+import { fileURLToPath } from 'url'
 import { promises as fs } from 'fs'
 import acorn from 'acorn'
 import astring from 'escodegen'
@@ -73,9 +73,6 @@ const run = async () => {
     return writeFile(url, data)
   }
 
-  let cjsCompile
-  let esmCompile
-
   const commands = {}
   commands.deflate = async (dist, cwd) => {
     const path = fileURLToPath(url)
@@ -93,8 +90,8 @@ const run = async () => {
   })
   parentPort.postMessage({ id: 'init', ret: imports })
   convert(cjs)
-  cjsCompile = generate(cjs, stropts)
-  esmCompile = generate(program, stropts)
+  const cjsCompile = generate(cjs, stropts)
+  const esmCompile = generate(program, stropts)
 }
 
 let mod = null

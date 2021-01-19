@@ -8,10 +8,12 @@ import { join } from 'path'
 import rmtree from '@tgrajewski/rmtree'
 import preserveShebangs from 'rollup-plugin-preserve-shebangs'
 
+const docFileRegex = /^(readme|license)/i
+
 const copy = o => JSON.parse(JSON.stringify(o))
 const vals = Object.values
 
-const { writeFile, mkdir, unlink, readdir, readFile } = fs
+const { writeFile, mkdir, unlink, readdir, readFile, copyFile } = fs
 
 const plugins = [ preserveShebangs.preserveShebangs() ]
 
@@ -72,6 +74,7 @@ class Package {
     }
     this.exports = exports
     let promises = [...this.files.values()]
+    this.docFiles = new Map((await this.getDocFiles()).map(f => [f, toURL(f)]))
     if (this.includeTests) {
       const testFiles = await this.getTestFiles()
       this.tests = new Map(testFiles.map(k => [k, this.testFile(toURL(k))]))
@@ -102,6 +105,10 @@ class Package {
     }
     if (!this.pkgjson.exports[key]) throw new Error(`No export named "${ex}"`)
     return this.pkgjson.exports[key]
+  }
+
+  async getDocFiles () {
+    return (await readdir(this.cwd)).filter(f => docFileRegex.test(f))
   }
 
   async getTestFiles () {
@@ -159,11 +166,13 @@ class Package {
   async deflate (dist) {
     if (!(dist instanceof URL)) dist = path(dist)
     rmtree(fileURLToPath(dist))
-    await mkdir(dist)
-    await mkdir(new URL(dist + '/cjs'))
+    await mkdir(new URL(dist + '/cjs'), { recursive: true })
     await mkdir(new URL(dist + '/esm'))
 
     const pending = [...this.files.values()].map(p => p.then(f => f.deflate(dist)))
+    for (const [f, url] of this.docFiles) {
+      pending.push(copyFile(url, new URL(`${dist}/${f}`)))
+    }
     if (this.includeTests) {
       pending.push(...[...this.testFiles.values()].map(p => p.then(f => f.deflate(dist))))
     }

@@ -1,9 +1,7 @@
 import pkg from './pkg/index.js'
 import ipfs from '@textile/ipfs-lite'
-import setup from '@textile/ipfs-lite/dist/setup/index.js'
 import storage from 'interface-datastore'
 const { Peer, BlockStore, Block } = ipfs
-const { setupLibP2PHost } = setup
 const { MemoryDatastore } = storage
 
 const store = new BlockStore(new MemoryDatastore())

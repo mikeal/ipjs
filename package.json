@@ -8,7 +8,7 @@
     "ipjs": "cli.js"
   },
   "scripts": {
-    "test": "estest test/test-*.js"
+    "test": "standard && estest test/test-*.js"
   },
   "repository": {
     "type": "git",
