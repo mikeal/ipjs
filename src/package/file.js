@@ -37,7 +37,7 @@ class File {
     this.onParse(this)
 
     const data = await readFile(this.url)
-    const program = parse(data, { sourceType: 'module', ecmaVersion: 2020 })
+    const program = parse(data, { sourceType: 'module', ecmaVersion: 2020, allowHashBang: true })
 
     const imports = []
 
