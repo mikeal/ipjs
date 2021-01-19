@@ -15,7 +15,7 @@ const vals = Object.values
 
 const { writeFile, mkdir, unlink, readdir, readFile, copyFile } = fs
 
-const plugins = [ preserveShebangs.preserveShebangs() ]
+const plugins = [preserveShebangs.preserveShebangs()]
 
 class Package {
   constructor ({ cwd, hooks, tests }) {
