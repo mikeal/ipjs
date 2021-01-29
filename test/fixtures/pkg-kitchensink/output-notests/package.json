@@ -10,14 +10,14 @@
   "license": "(Apache-2.0 AND MIT)",
   "exports": {
     ".": {
+      "browser": "./esm/src/browser.js",
       "require": "./cjs/src/index.js",
-      "import": "./esm/src/index.js",
-      "browser": "./esm/src/browser.js"
+      "import": "./esm/src/index.js"
     },
     "./secondary": {
+      "browser": "./esm/src/secondary.js",
       "require": "./cjs/src/secondary.js",
-      "import": "./esm/src/secondary.js",
-      "browser": "./esm/src/secondary.js"
+      "import": "./esm/src/secondary.js"
     }
   },
   "browser": {

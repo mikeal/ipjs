@@ -12,8 +12,8 @@
   "license": "(Apache-2.0 AND MIT)",
   "exports": {
     ".": {
-      "import": "./src/index.js",
       "browser": "./src/browser.js",
+      "import": "./src/index.js",
       "deno": "./src/deno.js"
     },
     "./secondary": {

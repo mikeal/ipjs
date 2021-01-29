@@ -190,9 +190,9 @@ class Package {
       const _import = this.relative(await ex.import)
       const _browser = ex.browser ? this.relative(await ex.browser) : _import
       json.exports[key] = {
+        browser: _join('esm', _browser),
         require: _join('cjs', _import),
-        import: _join('esm', _import),
-        browser: _join('esm', _browser)
+        import: _join('esm', _import)
       }
       json.browser[key] = _join('cjs', _browser)
     }
