@@ -1,10 +1,10 @@
 'use strict';
 
-var sub = require('../src/sub.js');
-var browser = require('../src/sub/browser.js');
 var browser$1 = require('../src/browser.js');
 var secondary = require('../src/secondary.js');
 require('./lib/shared.js');
+var sub = require('../src/sub.js');
+var browser = require('../src/sub/browser.js');
 
 var window;
 const type = window ? window.Deno ? 'deno' : 'browser' : 'import';

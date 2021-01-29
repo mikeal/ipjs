@@ -5,6 +5,15 @@ import { fileURLToPath, pathToFileURL } from 'url'
 import rmtree from '@tgrajewski/rmtree'
 import { deepStrictEqual as same } from 'assert'
 
+const eol = Buffer.from('\n')[0]
+
+const strip = buff => {
+  if (buff[buff.byteLength - 1] === eol) {
+    return buff.slice(0, buff.byteLength -2)
+  }
+  return buff
+}
+
 export default async test => {
   const url = new URL('fixtures/pkg-kitchensink/input', import.meta.url)
   const cwd = fileURLToPath(url)
@@ -18,8 +27,8 @@ export default async test => {
       if (stat.isDirectory()) {
         await verify(url, inputURL)
       } else {
-        const valid = await fs.readFile(url)
-        const data = await fs.readFile(inputURL)
+        const valid = strip(await fs.readFile(url))
+        const data = strip(await fs.readFile(inputURL))
         same(valid.toString(), data.toString())
       }
     }

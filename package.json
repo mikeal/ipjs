@@ -27,17 +27,17 @@
     ]
   },
   "devDependencies": {
-    "bent": "^7.3.9",
-    "estest": "^10.3.1",
-    "standard": "^14.3.4",
-    "tempy": "^0.6.0"
+    "bent": "^7.3.12",
+    "estest": "^10.3.6",
+    "standard": "^16.0.3",
+    "tempy": "^1.0.0"
   },
   "dependencies": {
-    "acorn": "^8.0.1",
+    "acorn": "^8.0.5",
     "@tgrajewski/rmtree": "^1.0.1",
     "esm-ast-to-cjs": "^0.0.2",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
-    "rollup": "^2.26.2",
+    "rollup": "^2.38.1",
     "escodegen": "^2.0.0"
   }
 }
