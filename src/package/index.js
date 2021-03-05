@@ -182,7 +182,6 @@ class Package {
     const json = copy(this.pkgjson)
 
     delete json.type
-    delete json.main
     json.browser = {}
     json.exports = {}
     const _join = (...args) => './' + join(...args)
