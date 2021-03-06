@@ -53,8 +53,7 @@ class Package {
 
     const exports = {}
     if (!json.exports) {
-      if (!json.main) exports['.'] = { import: this.file(toURL('./index.js')) }
-      exports['.'] = { import: this.file(toURL(json.main)) }
+      exports['.'] = { import: this.file(toURL(json.main || './index.js')) }
     } else {
       for (const [key, value] of Object.entries(json.exports)) {
         if (typeof value === 'string') exports[key] = { import: this.file(toURL(value)) }
@@ -182,6 +181,7 @@ class Package {
     const json = copy(this.pkgjson)
 
     delete json.type
+    json.main = `./${join('./cjs', json.main || './index.js')}`
     json.browser = {}
     json.exports = {}
     const _join = (...args) => './' + join(...args)
