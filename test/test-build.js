@@ -60,4 +60,13 @@ export default async test => {
     }
     */
   })
+
+  test('pkg-kitchensink w/ main', async test => {
+    const dist = pathToFileURL(await tempy.directory())
+    test.after(() => rmtree(fileURLToPath(dist)))
+    const opts = { cwd, dist, main: true }
+    await build(opts)
+    await verify(new URL('./output-main', url), dist)
+    await verify(dist, new URL('./output-main', url))
+  })
 }
