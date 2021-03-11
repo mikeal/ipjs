@@ -25,6 +25,9 @@ const run = async opts => {
   pkg.dist = dist
   return pkg
 }
-run.schema = { tests: false }
+run.schema = {
+  tests: false,
+  main: false
+}
 
 export default run

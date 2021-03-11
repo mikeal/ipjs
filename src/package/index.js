@@ -18,13 +18,14 @@ const { writeFile, mkdir, unlink, readdir, readFile, copyFile } = fs
 const plugins = [preserveShebangs.preserveShebangs()]
 
 class Package {
-  constructor ({ cwd, hooks, tests }) {
+  constructor ({ cwd, hooks, tests, main }) {
     this.cwd = cwd
     this.hooks = hooks || {}
     this.parsed = this.parse()
     this.files = new Map()
     this.testFiles = new Map()
     this.includeTests = tests
+    this.includeMain = main
   }
 
   file (url) {
@@ -181,7 +182,11 @@ class Package {
     const json = copy(this.pkgjson)
 
     delete json.type
-    json.main = `./${join('./cjs', json.main || './index.js')}`
+    if (this.includeMain) {
+      json.main = `./${join('./cjs', json.main || './index.js')}`
+    } else {
+      delete json.main
+    }
     json.browser = {}
     json.exports = {}
     const _join = (...args) => './' + join(...args)
