@@ -22,6 +22,8 @@
   },
   "browser": {
     ".": "./cjs/src/browser.js",
+    "./esm/src/index.js": "./esm/src/browser.js",
+    "./cjs/src/index.js": "./cjs/src/browser.js",
     "./secondary": "./cjs/src/secondary.js"
   }
 }

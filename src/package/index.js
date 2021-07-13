@@ -199,6 +199,10 @@ class Package {
         import: _join('esm', _import)
       }
       json.browser[key] = _join('cjs', _browser)
+      if (_import !== _browser) {
+        json.browser[_join('esm', _import)] = _join('esm', _browser)
+        json.browser[_join('cjs', _import)] = _join('cjs', _browser)
+      }
     }
     if (json.exports.import) {
       json.exports = json.exports.import
