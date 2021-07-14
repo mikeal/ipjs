@@ -1,1 +1,6 @@
-{ "type" : "module" }
+{
+  "type": "module",
+  "browser": {
+    "./src/index.js": "./src/browser.js"
+  }
+}

@@ -190,6 +190,7 @@ class Package {
     json.browser = {}
     json.exports = {}
     const _join = (...args) => './' + join(...args)
+    const esmBrowser = {}
     for (const [key, ex] of Object.entries(this.exports)) {
       const _import = this.relative(await ex.import)
       const _browser = ex.browser ? this.relative(await ex.browser) : _import
@@ -199,6 +200,11 @@ class Package {
         import: _join('esm', _import)
       }
       json.browser[key] = _join('cjs', _browser)
+      if (_import !== _browser) {
+        json.browser[_join('esm', _import)] = _join('esm', _browser)
+        json.browser[_join('cjs', _import)] = _join('cjs', _browser)
+        esmBrowser[_import] = _browser
+      }
     }
     if (json.exports.import) {
       json.exports = json.exports.import
@@ -206,8 +212,11 @@ class Package {
     }
     let files = Promise.all(pending)
     pending.push(writeFile(new URL(dist + '/package.json'), JSON.stringify(json, null, 2)))
-    const typeModule = '{ "type" : "module" }'
-    pending.push(writeFile(new URL(dist + '/esm/package.json'), typeModule))
+    const typeModule = {
+      type: 'module',
+      browser: esmBrowser
+    }
+    pending.push(writeFile(new URL(dist + '/esm/package.json'), JSON.stringify(typeModule, null, 2)))
     await Promise.all(pending)
     files = await files
     return files
