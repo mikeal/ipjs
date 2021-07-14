@@ -1,10 +1,10 @@
-import { promises as fs } from 'fs'
+import { promises as fs, existsSync } from 'fs'
 import { rollup } from 'rollup'
 import file from './file.js'
 import testFile from './testFile.js'
 import path from '../path-to-url.js'
 import { fileURLToPath } from 'url'
-import { join } from 'path'
+import { join, dirname } from 'path'
 import rmtree from '@tgrajewski/rmtree'
 import preserveShebangs from 'rollup-plugin-preserve-shebangs'
 
@@ -163,6 +163,37 @@ class Package {
     await unlink(new URL(dist + '/cjs/_ipjsInput.js'))
   }
 
+  async stubFiles (dist, files) {
+    await Promise.all(
+      files.map(async (file) => {
+        if (file === '.') {
+          file = 'index.js'
+        }
+        if (file.startsWith('./')) {
+          file = file.substring(2)
+        }
+        const dir = dirname(file)
+        if (dir !== '.') {
+          try {
+            await mkdir(new URL(dist + '/' + dir), {
+              recursive: true
+            })
+          } catch (err) {
+            if (err.code !== 'EEXIST') {
+              throw err
+            }
+          }
+        }
+
+        if (existsSync(new URL(dist + '/' + file))) {
+          return
+        }
+
+        await writeFile(new URL(dist + '/' + file), '')
+      })
+    )
+  }
+
   async deflate (dist) {
     if (!(dist instanceof URL)) dist = path(dist)
     rmtree(fileURLToPath(dist))
@@ -204,6 +235,7 @@ class Package {
       json.exports = json.exports.import
       json.browser = json.browser.import
     }
+    await this.stubFiles(dist, Object.keys(json.browser))
     let files = Promise.all(pending)
     pending.push(writeFile(new URL(dist + '/package.json'), JSON.stringify(json, null, 2)))
     const typeModule = '{ "type" : "module" }'
