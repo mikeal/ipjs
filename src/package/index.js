@@ -4,7 +4,7 @@ import file from './file.js'
 import testFile from './testFile.js'
 import path from '../path-to-url.js'
 import { fileURLToPath } from 'url'
-import { join, dirname } from 'path'
+import { join, dirname, resolve, relative } from 'path'
 import rmtree from '@tgrajewski/rmtree'
 import preserveShebangs from 'rollup-plugin-preserve-shebangs'
 
@@ -163,9 +163,11 @@ class Package {
     await unlink(new URL(dist + '/cjs/_ipjsInput.js'))
   }
 
-  async stubFiles (dist, files) {
+  async stubFiles (dist, overrides) {
     await Promise.all(
-      files.map(async (file) => {
+      Object.keys(overrides).map(async (file) => {
+        const target = overrides[file]
+
         if (file === '.') {
           file = 'index.js'
         }
@@ -189,7 +191,17 @@ class Package {
           return
         }
 
-        await writeFile(new URL(dist + '/' + file), '')
+        const distPath = fileURLToPath(dist)
+        const stubUrl = new URL(dist + '/' + file)
+        const stubPath = fileURLToPath(stubUrl)
+        const targetPath = resolve(join(distPath, target))
+        let relativePath = relative(dirname(stubPath), targetPath)
+
+        if (!relativePath.startsWith('./')) {
+          relativePath = `./${relativePath}`
+        }
+
+        await writeFile(stubUrl, `module.exports = require('${relativePath}')\n`)
       })
     )
   }
@@ -241,7 +253,7 @@ class Package {
       json.exports = json.exports.import
       json.browser = json.browser.import
     }
-    await this.stubFiles(dist, Object.keys(json.browser))
+    await this.stubFiles(dist, json.browser)
     let files = Promise.all(pending)
     pending.push(writeFile(new URL(dist + '/package.json'), JSON.stringify(json, null, 2)))
     const typeModule = {
