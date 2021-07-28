@@ -43,7 +43,13 @@ to avoid. Some are because there just isn't a very good way to provide consisten
 and some are because we need some more explicit information about your library in order
 to detect the dependency tree and built it successfully.
 
-### Do not use mixed default default and named exports/imports
+### Only use named exports in files in the package.json exports map
+
+If you use default exports from files in the exports map:
+
+- CJS/JSDoc+Typescript users of your module will find that `tsc` fails to compile as it expects a the `.default` property to be present on anything `require`d from your module
+- If they switch to `.default` to satisfy `tsc`, node will resolve cjs at runtime via the `"require":` entry from the exports map which does not have a `.default` so will fail
+- If they switch back to no `.default`, running bundled cjs in the browser will also fail as it will be supplied the esm version where `.default` is present after all
 
 ### Only export individual files in export map (no directories or pattern matching)
 
