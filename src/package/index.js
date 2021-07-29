@@ -144,7 +144,7 @@ class Package {
         paths.push(...['./browser-', './node-'].map(n => n + rel.slice(2)))
       }
     }
-    const code = paths.map(p => `import("${p}")`).join('\n')
+    const code = paths.map(p => `import("${p.replace(/\\/g, '/')}")`).join('\n')
     const input = new URL(dist + '/esm/_ipjsInput.js')
     await writeFile(input, code)
     const onwarn = warning => {
