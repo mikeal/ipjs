@@ -164,6 +164,10 @@ class Package {
   }
 
   async stubFiles (dist, overrides) {
+    if (typeof overrides === 'string') {
+      overrides = { '.': overrides }
+    }
+
     await Promise.all(
       Object.keys(overrides).map(async (file) => {
         const target = overrides[file]
