@@ -55,6 +55,8 @@ class Package {
     const exports = {}
     if (!json.exports) {
       exports['.'] = { import: this.file(toURL(json.main || './index.js')) }
+    } else if (typeof json.exports === 'string') {
+      exports['.'] = { import: this.file(toURL(json.exports)) }
     } else {
       for (const [key, value] of Object.entries(json.exports)) {
         if (typeof value === 'string') exports[key] = { import: this.file(toURL(value)) }
@@ -164,6 +166,10 @@ class Package {
   }
 
   async stubFiles (dist, overrides) {
+    if (typeof overrides === 'string') {
+      overrides = { '.': overrides }
+    }
+
     await Promise.all(
       Object.keys(overrides).map(async (file) => {
         const target = overrides[file]

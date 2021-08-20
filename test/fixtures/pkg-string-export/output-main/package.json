@@ -1,0 +1,22 @@
+{
+  "name": "pkg-single-export",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./cjs/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
+  "license": "(Apache-2.0 AND MIT)",
+  "exports": {
+    ".": {
+      "browser": "./esm/index.js",
+      "require": "./cjs/index.js",
+      "import": "./esm/index.js"
+    }
+  },
+  "browser": {
+    ".": "./cjs/index.js"
+  }
+}

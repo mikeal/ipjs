@@ -1,38 +1,12 @@
 import build from '../src/build.js'
 import tempy from 'tempy'
-import { promises as fs } from 'fs'
 import { fileURLToPath, pathToFileURL } from 'url'
 import rmtree from '@tgrajewski/rmtree'
-import { deepStrictEqual as same } from 'assert'
-
-const eol = Buffer.from('\n')[0]
-
-const strip = buff => {
-  if (buff[buff.byteLength - 1] === eol) {
-    return buff.slice(0, buff.byteLength -2)
-  }
-  return buff
-}
+import verify from './fixtures/verify.js'
 
 export default async test => {
   const url = new URL('fixtures/pkg-kitchensink/input', import.meta.url)
   const cwd = fileURLToPath(url)
-
-  const verify = async (comp, input) => {
-    const files = await fs.readdir(comp)
-    for (const file of files) {
-      const url = new URL(comp + '/' + file)
-      const inputURL = new URL(input + '/' + file)
-      const stat = await fs.stat(url)
-      if (stat.isDirectory()) {
-        await verify(url, inputURL)
-      } else {
-        const valid = strip(await fs.readFile(url))
-        const data = strip(await fs.readFile(inputURL))
-        same(valid.toString(), data.toString())
-      }
-    }
-  }
 
   test('pkg-kitchensink', async test => {
     const dist = pathToFileURL(await tempy.directory())
