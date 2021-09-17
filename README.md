@@ -53,3 +53,45 @@ If you use default exports from files in the exports map:
 
 ### Only export individual files in export map (no directories or pattern matching)
 
+### Avoid `instanceof`
+
+The exports map means ESM and CJS environments load the same paths from different files:
+
+```javascript
+// package.json
+{
+  "name": "my-esm-project",
+  "exports": {
+    "my-class": {
+      "import": "esm/src/my-class.js",
+      "require": "cjs/src/my-class.js",
+    }
+  }
+  // ...other fields
+}
+```
+
+If a CJS file uses `instanceof` on an instance of a class loaded from and instantiated in an ESM file (or vice versa), the check will fail, even though there may only be one copy of that dependency in the tree - it's because they've been loaded from different files within that dependency.
+
+For example, consider `my-esm-project`, built with ipjs and published as dual cjs/esm:
+
+```javascript
+// is-my-class.cjs
+const MyClass = require('my-esm-project/my-class')
+
+module.exports = (obj) => {
+  return obj instanceof MyClass
+}
+```
+
+```javascript
+// main.js
+import isMyClass from './is-my-class.cjs'
+import MyClass from 'my-esm-project/my-class'
+
+const obj = new MyClass()
+
+console.info(isMyClass(obj)) // false - perhaps not what we were expecting
+```
+
+It's possible to cross the ESM/CJS boundary like this several times during code execution, sometimes even within the same project so it's recommended not to use `instanceof`.
