@@ -165,6 +165,23 @@ class Package {
     await unlink(new URL(dist + '/cjs/_ipjsInput.js'))
   }
 
+  calcuateStubs (json) {
+    if (typeof json.browser === 'string') {
+      return { '.': json.browser }
+    }
+
+    const stubs = {}
+
+    for (const key in json.browser) {
+      if (!json.exports[key]) {
+        continue
+      }
+      stubs[key] = json.exports[key].require
+    }
+
+    return stubs
+  }
+
   async stubFiles (dist, overrides) {
     if (typeof overrides === 'string') {
       overrides = { '.': overrides }
@@ -250,6 +267,7 @@ class Package {
       }
       json.browser[key] = _join('cjs', _browser)
       if (_import !== _browser) {
+        // https://github.com/mikeal/ipjs/pull/12#issue-943461643
         json.browser[_join('esm', _import)] = _join('esm', _browser)
         json.browser[_join('cjs', _import)] = _join('cjs', _browser)
         esmBrowser[_import] = _browser
@@ -259,7 +277,10 @@ class Package {
       json.exports = json.exports.import
       json.browser = json.browser.import
     }
-    await this.stubFiles(dist, json.browser)
+
+    const stubs = this.calcuateStubs(json)
+    await this.stubFiles(dist, stubs)
+
     let files = Promise.all(pending)
     pending.push(writeFile(new URL(dist + '/package.json'), JSON.stringify(json, null, 2)))
     const typeModule = {

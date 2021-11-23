@@ -18,6 +18,10 @@
     },
     "./secondary": {
       "import": "./src/secondary.js"
+    },
+    "./tertiary": {
+      "browser": "./src/tertiary.browser.js",
+      "import": "./src/tertiary.js"
     }
   }
 }

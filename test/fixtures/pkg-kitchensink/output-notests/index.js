@@ -1,1 +1,1 @@
-module.exports = require('./cjs/src/browser.js')
+module.exports = require('./cjs/src/index.js')
