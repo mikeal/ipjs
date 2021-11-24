@@ -183,10 +183,6 @@ class Package {
   }
 
   async stubFiles (dist, overrides) {
-    if (typeof overrides === 'string') {
-      overrides = { '.': overrides }
-    }
-
     await Promise.all(
       Object.keys(overrides).map(async (file) => {
         const target = overrides[file]
@@ -274,6 +270,7 @@ class Package {
       }
     }
     if (json.exports.import) {
+      // https://github.com/mikeal/ipjs/pull/18#issue-974673903
       json.exports = json.exports.import
       json.browser = json.browser.import
     }
@@ -285,6 +282,7 @@ class Package {
     pending.push(writeFile(new URL(dist + '/package.json'), JSON.stringify(json, null, 2)))
     const typeModule = {
       type: 'module',
+      // https://github.com/mikeal/ipjs/pull/12#issuecomment-879816902
       browser: esmBrowser
     }
     pending.push(writeFile(new URL(dist + '/esm/package.json'), JSON.stringify(typeModule, null, 2)))
