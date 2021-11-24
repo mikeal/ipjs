@@ -1,6 +1,7 @@
 {
   "type": "module",
   "browser": {
-    "./src/index.js": "./src/browser.js"
+    "./src/index.js": "./src/browser.js",
+    "./src/tertiary.js": "./src/tertiary.browser.js"
   }
 }

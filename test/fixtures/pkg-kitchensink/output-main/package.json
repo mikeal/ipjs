@@ -19,12 +19,20 @@
       "browser": "./esm/src/secondary.js",
       "require": "./cjs/src/secondary.js",
       "import": "./esm/src/secondary.js"
+    },
+    "./tertiary": {
+      "browser": "./esm/src/tertiary.browser.js",
+      "require": "./cjs/src/tertiary.js",
+      "import": "./esm/src/tertiary.js"
     }
   },
   "browser": {
     ".": "./cjs/src/browser.js",
     "./esm/src/index.js": "./esm/src/browser.js",
     "./cjs/src/index.js": "./cjs/src/browser.js",
-    "./secondary": "./cjs/src/secondary.js"
+    "./secondary": "./cjs/src/secondary.js",
+    "./tertiary": "./cjs/src/tertiary.browser.js",
+    "./esm/src/tertiary.js": "./esm/src/tertiary.browser.js",
+    "./cjs/src/tertiary.js": "./cjs/src/tertiary.browser.js"
   }
 }
