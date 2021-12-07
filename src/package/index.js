@@ -11,6 +11,7 @@ import preserveShebangs from 'rollup-plugin-preserve-shebangs'
 const docFileRegex = /^(readme|license)/i
 
 const copy = o => JSON.parse(JSON.stringify(o))
+const cleanPath = (p) => p.replace(/\\/g, '/')
 const vals = Object.values
 
 const { writeFile, mkdir, unlink, readdir, readFile, copyFile } = fs
@@ -146,7 +147,7 @@ class Package {
         paths.push(...['./browser-', './node-'].map(n => n + rel.slice(2)))
       }
     }
-    const code = paths.map(p => `import("${p.replace(/\\/g, '/')}")`).join('\n')
+    const code = paths.map(p => `import("${cleanPath(p)}")`).join('\n')
     const input = new URL(dist + '/esm/_ipjsInput.js')
     await writeFile(input, code)
     const onwarn = warning => {
@@ -251,7 +252,7 @@ class Package {
     }
     json.browser = {}
     json.exports = {}
-    const _join = (...args) => './' + join(...args)
+    const _join = (...args) => `./${cleanPath(join(...args))}`
     const esmBrowser = {}
     for (const [key, ex] of Object.entries(this.exports)) {
       const _import = this.relative(await ex.import)
@@ -266,7 +267,7 @@ class Package {
         // https://github.com/mikeal/ipjs/pull/12#issue-943461643
         json.browser[_join('esm', _import)] = _join('esm', _browser)
         json.browser[_join('cjs', _import)] = _join('cjs', _browser)
-        esmBrowser[_import] = _browser
+        esmBrowser[cleanPath(_import)] = cleanPath(_browser)
       }
     }
     if (json.exports.import) {

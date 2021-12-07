@@ -3,10 +3,12 @@ name: Build, Test and maybe Publish
 jobs:
   test:
     name: Build & Test
-    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [12.x, 14.x, 16.x]
+        os: [macos-latest, ubuntu-latest] # pending estest support: windows-latest
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -25,7 +27,9 @@ jobs:
     - name: Test
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: npm test
+      run: |
+        npm config set script-shell bash
+        npm test
   publish:
     name: Publish
     needs: test
@@ -47,7 +51,9 @@ jobs:
       if: steps.cache-modules.outputs.cache-hit != 'true'
       run: npm install
     - name: Test
-      run: npm test
+      run: |
+        npm config set script-shell bash
+        npm test
 
     - name: Publish
       uses: mikeal/merge-release@master
